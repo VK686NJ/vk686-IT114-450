@@ -19,6 +19,8 @@ public class Problem1 {
         System.out.println("Odds output:");
         //hint: use the arr variable; don't diretly use the a1-a4 variables
         //TODO add/edit code here
+        //vk686 6-5-2024
+        
         for (int x : arr) {
             if ( x % 2 != 0) {
                 System.out.println(x);

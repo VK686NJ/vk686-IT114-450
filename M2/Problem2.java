@@ -22,6 +22,7 @@ public class Problem2 {
         String totalOutput = "";
         //hint: use the arr variable; don't diretly use the a1-a4 variables
         //TODO add/edit code here
+        //vk686 6-5-2024
         //set the double to a string variable
         for (double x : arr) {
             total += x;

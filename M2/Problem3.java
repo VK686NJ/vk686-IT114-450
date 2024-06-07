@@ -19,8 +19,9 @@ public class Problem3 {
     static <T> void bePositive(T[] arr){
         System.out.println("Processing Array:" + Arrays.toString(arr));
         //your code should set the indexes of this array
+        //vk686 6-5-2024
         Object[] output = new Object[arr.length];
-        //Change each value to positive while keeping the original data type.
+        //Change each value to positive while keeping the original data type
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] instanceof Integer) {
                 output[i] = Math.abs((Integer) arr[i]);
