@@ -3,6 +3,8 @@ package Module4.Part3HW;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
@@ -121,6 +123,34 @@ public class Server {
             return true;
         }
         // add more "else if" as needed
+        //vk686 06/17/2024
+        else if (message.toLowerCase().startsWith("/shuffle ")) {
+            // Get the text to shuffle, ignoring the "/shuffle " part
+            String text = message.substring(12);
+        
+            // Create a list of characters from the input text
+            List<Character> chars = new ArrayList<>();
+            for (char c : text.toCharArray()) {
+                chars.add(c);
+            }
+        
+            // Shuffle the characters and build the shuffled message
+            StringBuilder output = new StringBuilder(text.length());
+            while (!chars.isEmpty()) {
+                int rand = (int) (Math.random() * chars.size());
+                output.append(chars.remove(rand));
+            }
+        
+            // Convert the shuffled characters back to a string
+            String shuffledMessage = output.toString();
+        
+            // Send the shuffled message to the user who requested it
+            sender.send("Server: your shuffled message: " + shuffledMessage);
+        
+            // Broadcast the shuffled message to all users
+            relay(String.format("User[%s] randomized the message to: %s", sender.getClientId(), shuffledMessage), sender);
+            return true;
+        }
         return false;
     }
 
