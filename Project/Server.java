@@ -20,6 +20,7 @@ public enum Server {
             shutdown();
         }));
     }
+    //vk686 06/24/2024
 
     private void start(int port) {
         this.port = port;
@@ -50,6 +51,7 @@ public enum Server {
     /**
      * Gracefully disconnect clients
      */
+    //vk686 06/24/2024
     private void shutdown() {
         try {
             //chose removeIf over forEach to avoid potential ConcurrentModificationException
@@ -86,6 +88,7 @@ public enum Server {
      * @param name Unique name of the room
      * @return true if it was created and false if it wasn't
      */
+    //vk686 04/24/2024
     protected boolean createRoom(String name) {
         final String nameCheck = name.toLowerCase();
         if (rooms.containsKey(nameCheck)) {
@@ -104,6 +107,7 @@ public enum Server {
      * @param client the client moving
      * @return true if the move was successful, false otherwise
      */
+    //vk686 04/24/2024
     protected boolean joinRoom(String name, ServerThread client) {
         final String nameCheck = name.toLowerCase();
         if (!rooms.containsKey(nameCheck)) {

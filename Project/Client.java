@@ -40,6 +40,7 @@ public enum Client {
     private final String SINGLE_SPACE = " ";
 
     // needs to be private now that the enum logic is handling this
+    //vk686 06/24/2024
     private Client() {
         System.out.println("Client Created");
         myData = new ClientData();
@@ -63,6 +64,7 @@ public enum Client {
      * @param port
      * @return true if connection was successful
      */
+    //vk686 06/24/2024
     private boolean connect(String address, int port) {
         try {
             server = new Socket(address, port);
@@ -97,6 +99,7 @@ public enum Client {
      * @param text
      * @return true if the text is a valid connection command
      */
+    //vk686 06/24/2024
     private boolean isConnection(String text) {
         Matcher ipMatcher = ipAddressPattern.matcher(text);
         Matcher localhostMatcher = localhostPattern.matcher(text);
@@ -112,6 +115,7 @@ public enum Client {
      * @param text
      * @return true if the text was a command or triggered a command
      */
+    //vk686 06/24/2024
     private boolean processClientCommand(String text) {
         if (isConnection(text)) {
             if (myData.getClientName() == null || myData.getClientName().length() == 0) {
@@ -200,6 +204,7 @@ public enum Client {
     /**
      * Tells the server-side we want to disconnect
      */
+    //vk686 06/24/2024
     private void sendDisconnect() {
         Payload p = new Payload();
         p.setPayloadType(PayloadType.DISCONNECT);
@@ -211,6 +216,7 @@ public enum Client {
      * 
      * @param message
      */
+    //vk686 06/24/2024
     private void sendMessage(String message) {
         Payload p = new Payload();
         p.setPayloadType(PayloadType.MESSAGE);
@@ -236,6 +242,7 @@ public enum Client {
      * 
      * @param p
      */
+    //vk686 06/24/2024
     private void send(Payload p) {
         try {
             out.writeObject(p);
@@ -246,7 +253,7 @@ public enum Client {
 
     }
     // end send methods
-
+    //vk686 06/24/2024
     public void start() throws IOException {
         System.out.println("Client starting");
 
@@ -289,6 +296,7 @@ public enum Client {
     /**
      * Listens for keyboard input from the user
      */
+    //vk686 06/24/2024
     private void listenToInput() {
         try (Scanner si = new Scanner(System.in)) {
             System.out.println("Waiting for input"); // moved here to avoid console spam
@@ -368,6 +376,7 @@ public enum Client {
      * 
      * @param payload
      */
+    //vk686 06/24/2024
     private void processPayload(Payload payload) {
         try {
             System.out.println("Received Payload: " + payload);
@@ -420,7 +429,8 @@ public enum Client {
             // knownClients.put(cp.getClientId(), myData);// <-- this is handled later
         }
     }
-
+    
+    //vk686 06/24/2024
     private void processMessage(long clientId, String message) {
         String name = knownClients.containsKey(clientId) ? knownClients.get(clientId).getClientName() : "Room";
         System.out.println(TextFX.colorize(String.format("%s: %s", name, message), Color.BLUE));

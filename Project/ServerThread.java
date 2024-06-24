@@ -75,13 +75,14 @@ public class ServerThread extends BaseServerThread {
         currentRoom = null;
         super.cleanup();
     }
-    
+    //vk686 06/24/2024
     @Override
     protected void disconnect(){
         //sendDisconnect(clientId, clientName);
         super.disconnect();
     }
     // handle received message from the Client
+    //vk686 06/24/2024
     @Override
     protected void processPayload(Payload payload) {
         try {
@@ -139,6 +140,7 @@ public class ServerThread extends BaseServerThread {
      * @param message
      * @return @see {@link #send(Payload)}
      */
+    //vk686 06/24/2024
     public boolean sendMessage(long senderId, String message) {
         Payload p = new Payload();
         p.setClientId(senderId);
