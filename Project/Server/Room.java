@@ -1,6 +1,8 @@
-package Project;
+package Project.Server;
 
 import java.util.concurrent.ConcurrentHashMap;
+
+import Project.Common.LoggerUtil;
 
 public class Room implements AutoCloseable{
     private String name;// unique name of the Room
@@ -10,13 +12,13 @@ public class Room implements AutoCloseable{
     public final static String LOBBY = "lobby";
 
     private void info(String message) {
-        System.out.println(String.format("Room[%s]: %s", name, message));
+        LoggerUtil.INSTANCE.info(String.format("Room[%s]: %s", name, message));
     }
 
     public Room(String name) {
         this.name = name;
         isRunning = true;
-        System.out.println(String.format("Room[%s] created", this.name));
+        info("created");
     }
 
     public String getName() {
@@ -181,7 +183,6 @@ public class Room implements AutoCloseable{
      * @param sender  ServerThread (client) sending the message or null if it's a
      *                server-generated message
      */
-    //vk686 06/24/2024
     protected synchronized void sendMessage(ServerThread sender, String message) {
         if (!isRunning) { // block action if Room isn't running
             return;
@@ -205,7 +206,7 @@ public class Room implements AutoCloseable{
         });
     }
     // end send data to client(s)
-    //vk686 06/24/2024
+
     // receive data from ServerThread
     protected void handleCreateRoom(ServerThread sender, String room) {
         if (Server.INSTANCE.createRoom(room)) {
@@ -219,6 +220,10 @@ public class Room implements AutoCloseable{
         if (!Server.INSTANCE.joinRoom(room, sender)) {
             sender.sendMessage(String.format("Room %s doesn't exist", room));
         }
+    }
+
+    protected void handleListRooms(ServerThread sender, String roomQuery){
+        sender.sendRooms(Server.INSTANCE.listRooms(roomQuery));
     }
 
     protected void clientDisconnect(ServerThread sender) {
