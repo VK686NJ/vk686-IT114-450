@@ -1,5 +1,5 @@
 package Project.Common;
-
+//vk686 07/08/2024
 public enum PayloadType {
     CLIENT_CONNECT, // client requesting to connect to server (passing of initialization data [name])
     CLIENT_ID,  // server sending client id
@@ -9,4 +9,6 @@ public enum PayloadType {
     ROOM_JOIN, // join/leave room based on boolean
     MESSAGE, // sender and message,
     ROOM_LIST, // client: query for rooms, server: result of query
+    ROLL, //Rolling dice
+    FLIP //Flipping a coin
 }

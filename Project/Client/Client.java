@@ -16,9 +16,11 @@ import Project.Common.ConnectionPayload;
 import Project.Common.LoggerUtil;
 import Project.Common.Payload;
 import Project.Common.PayloadType;
+import Project.Common.RollPayload;
 import Project.Common.RoomResultsPayload;
 import Project.Common.TextFX;
 import Project.Common.TextFX.Color;
+
 
 /**
  * Demoing bi-directional communication between client and server in a
@@ -45,7 +47,7 @@ public enum Client {
     private volatile boolean isRunning = true; // volatile for thread-safe visibility
     private ConcurrentHashMap<Long, ClientData> knownClients = new ConcurrentHashMap<>();
     private ClientData myData;
-
+    //vk686 07/07/2024
     // constants (used to reduce potential types when using them in code)
     private final String COMMAND_CHARACTER = "/";
     private final String CREATE_ROOM = "createroom";
@@ -55,6 +57,8 @@ public enum Client {
     private final String LOGOFF = "logoff";
     private final String LOGOUT = "logout";
     private final String SINGLE_SPACE = " ";
+    private final String ROLL = "roll";
+    private final String FLIP = "flip";
 
     // needs to be private now that the enum logic is handling this
     private Client() {
@@ -182,7 +186,16 @@ public enum Client {
                     case DISCONNECT:
                     case LOGOFF:
                     case LOGOUT:
+                    //vk686 07/07/2024
                         sendDisconnect();
+                        wasCommand = true;
+                        break;
+                    case ROLL:
+                        sendRoll(commandValue);
+                        wasCommand = true;
+                        break;
+                    case FLIP:
+                        sendFlip();
                         wasCommand = true;
                         break;
                 }
@@ -203,6 +216,28 @@ public enum Client {
         p.setPayloadType(PayloadType.ROOM_LIST);
         p.setMessage(roomQuery);
         send(p);
+    }
+    
+    //vk686 07/07/2024
+    private void sendRoll(String commandValue) {
+    RollPayload p = new RollPayload();
+    p.setPayloadType(PayloadType.ROLL);
+    if (commandValue.contains("d")) {
+        String[] parts = commandValue.split("d");
+        p.setNumberOfDice(Integer.parseInt(parts[0]));
+        p.setSidesPerDie(Integer.parseInt(parts[1]));
+    } else {
+        p.setNumberOfDice(1);
+        p.setSidesPerDie(Integer.parseInt(commandValue));
+    }
+    send(p);
+    }
+    //vk686 07/07/2024
+    private void sendFlip() {
+    Payload p = new Payload();
+    p.setPayloadType(PayloadType.FLIP);
+    p.setMessage("flip");
+    send(p);
     }
 
     /**
