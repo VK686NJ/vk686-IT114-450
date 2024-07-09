@@ -3,6 +3,8 @@ package Project.Server;
 import java.util.concurrent.ConcurrentHashMap;
 
 import Project.Common.LoggerUtil;
+import Project.Common.RollPayload;
+
 
 public class Room implements AutoCloseable{
     private String name;// unique name of the Room
@@ -229,6 +231,36 @@ public class Room implements AutoCloseable{
     protected void clientDisconnect(ServerThread sender) {
         disconnect(sender);
     }
+
+    //vk686 07/08/2024
+     protected void handleRoll(ServerThread sender, RollPayload payload) {
+        int numberOfDice = payload.getNumberOfDice();
+        int sidesPerDie = payload.getSidesPerDie();
+        int rollResult = rollDice(numberOfDice, sidesPerDie);
+        payload.setRollResult(rollResult);
+        String result;
+        if (numberOfDice == 1) {
+            result = String.format("%s rolled %d and got %d", sender.getClientName(), sidesPerDie, rollResult);
+        } else {
+            result = String.format("%s rolled %dd%d and got %d", sender.getClientName(), numberOfDice, sidesPerDie, rollResult);
+        }
+        sendMessage(sender, result);
+    }
+
+    private int rollDice(int numberOfDice, int sidesPerDie) {
+        int total = 0;
+        for (int i = 0; i < numberOfDice; i++) {
+            total += (int) (Math.random() * sidesPerDie) + 1;
+        }
+        return total;
+    }
+
+    protected void handleFlip(ServerThread sender) {
+        String result = Math.random() < 0.5 ? "heads" : "tails";
+        String message = String.format("%s flipped a coin and got %s", sender.getClientName(), result);
+        sendMessage(sender, message);
+    }
+
 
     // end receive data from ServerThread
 }

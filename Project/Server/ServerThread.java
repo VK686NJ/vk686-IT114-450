@@ -6,9 +6,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import Project.Common.PayloadType;
+import Project.Common.RollPayload;
 import Project.Common.RoomResultsPayload;
+import Project.Common.TextFX;
 import Project.Common.Payload;
-
 import Project.Common.ConnectionPayload;
 import Project.Common.LoggerUtil;
 
@@ -101,7 +102,8 @@ public class ServerThread extends BaseServerThread {
                     setClientName(cp.getClientName());
                     break;
                 case MESSAGE:
-                    currentRoom.sendMessage(this, payload.getMessage());
+                    String formattedMessage = TextFX.formatText(payload.getMessage());
+                    currentRoom.sendMessage(this, formattedMessage);
                     break;
                 case ROOM_CREATE:
                     currentRoom.handleCreateRoom(this, payload.getMessage());
@@ -111,6 +113,13 @@ public class ServerThread extends BaseServerThread {
                     break;
                 case ROOM_LIST:
                     currentRoom.handleListRooms(this, payload.getMessage());
+                    break;
+                //vk686 07/07/2024
+                case ROLL:
+                    handleRollPayload((RollPayload) payload);
+                    break;
+                case FLIP:
+                    handleFlipPayload(payload);
                     break;
                 case DISCONNECT:
                     currentRoom.disconnect(this);
@@ -124,6 +133,36 @@ public class ServerThread extends BaseServerThread {
         }
     }
 
+    //vk686 07/07/2024
+    private void handleRollPayload(RollPayload rollPayload) {
+        int numberOfDice = rollPayload.getNumberOfDice();
+        int sidesPerDie = rollPayload.getSidesPerDie();
+        int rollResult = rollDice(numberOfDice, sidesPerDie);
+        rollPayload.setRollResult(rollResult);
+        String result;
+        if (numberOfDice == 1) {
+            result = String.format("%s rolled %d and got %d", getClientName(), sidesPerDie, rollResult);
+        } else {
+            result = String.format("%s rolled %dd%d and got %d", getClientName(), numberOfDice, sidesPerDie, rollResult);
+        }
+        currentRoom.sendMessage(this, result);
+    }
+    
+    private int rollDice(int numberOfDice, int sidesPerDie) {
+        int total = 0;
+        for (int i = 0; i < numberOfDice; i++) {
+            total += (int) (Math.random() * sidesPerDie) + 1;
+        }
+        return total;
+    }
+    
+    private void handleFlipPayload(Payload payload) {
+        String message = Math.random() < 0.5 ? "heads" : "tails";
+        String result = String.format("%s flipped a coin and got %s", getClientName(), message);
+        currentRoom.sendMessage(this, result);
+    }
+    
+    
     // send methods to pass data back to the Client
 
     public boolean sendRooms(List<String> rooms) {
