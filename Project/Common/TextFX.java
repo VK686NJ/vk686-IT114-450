@@ -67,9 +67,9 @@ public abstract class TextFX {
         text = text.replaceAll("\\*\\*(.*?)\\*\\*", "<b>$1</b>");
         text = text.replaceAll("\\*(.*?)\\*", "<i>$1</i>");
         text = text.replaceAll("_(.*?)_", "<u>$1</u>");
-        text = text.replaceAll("#r(.*?)r#", "<red>$1</red>");
-        text = text.replaceAll("#g(.*?)g#", "<green>$1</green>");
-        text = text.replaceAll("#b(.*?)b#", "<blue>$1</blue>");
+        text = text.replaceAll("#r(.*?)r#", "<font color='red'>$1</font>");
+        text = text.replaceAll("#g(.*?)g#", "<font color='green'>$1</font>");
+        text = text.replaceAll("#b(.*?)b#", "<font color='blue'>$1</font>");
         return text;
     }
 

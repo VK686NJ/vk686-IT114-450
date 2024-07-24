@@ -10,5 +10,6 @@ public enum PayloadType {
     MESSAGE, // sender and message,
     ROOM_LIST, // client: query for rooms, server: result of query
     ROLL, //Rolling dice
-    FLIP //Flipping a coin
+    FLIP, //Flipping a coin
+    PRIVATE 
 }
