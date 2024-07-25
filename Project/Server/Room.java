@@ -3,10 +3,8 @@ package Project.Server;
 import java.util.concurrent.ConcurrentHashMap;
 
 import Project.Common.LoggerUtil;
-import Project.Common.RollPayload;
 
-
-public class Room implements AutoCloseable{
+public class Room implements AutoCloseable {
     private String name;// unique name of the Room
     private volatile boolean isRunning = false;
     private ConcurrentHashMap<Long, ServerThread> clientsInRoom = new ConcurrentHashMap<Long, ServerThread>();
@@ -79,7 +77,7 @@ public class Room implements AutoCloseable{
         client.disconnect();
         // removedClient(client); // <-- use this just for normal room leaving
         clientsInRoom.remove(client.getClientId());
-        
+
         // Improved logging with user data
         info(String.format("%s[%s] disconnected", client.getClientName(), id));
     }
@@ -125,6 +123,7 @@ public class Room implements AutoCloseable{
 
     /**
      * Sends to all clients details of a disconnect client
+     * 
      * @param client
      */
     protected synchronized void sendDisconnect(ServerThread client) {
@@ -163,6 +162,10 @@ public class Room implements AutoCloseable{
     protected synchronized void sendRoomStatus(long clientId, String clientName, boolean isConnect) {
         info(String.format("sending room status to %s recipients", getName(), clientsInRoom.size()));
         clientsInRoom.values().removeIf(client -> {
+            //if (client.isMuted(senderId)) {
+                //LoggerUtil.INSTANCE.info("Message skipped for muted user: " + client.getClientName());
+                //return false;
+            
             boolean failedToSend = !client.sendRoomAction(clientId, clientName, getName(), isConnect);
             if (failedToSend) {
                 info(String.format("Removing disconnected client[%s] from list", client.getClientId()));
@@ -207,6 +210,26 @@ public class Room implements AutoCloseable{
             return failedToSend;
         });
     }
+    //vk686 07/23/2024
+    protected synchronized void sendPrivateMessage(ServerThread sender, long targetClientId, String message) {
+        if (!isRunning) { // Blocking action if Room isn't running
+            return;
+        }
+
+        ServerThread targetClient = clientsInRoom.get(targetClientId);
+        if (targetClient == null) {
+            sender.sendMessage(String.format("User with ID %d not found in the room", targetClientId));
+            return;
+        }
+
+        long senderId = sender == null ? ServerThread.DEFAULT_CLIENT_ID : sender.getClientId();
+        String formattedMessage = String.format("Private message: %s", message);
+    // Sending the message to both(Sender and Target user)
+        sender.sendMessage(senderId, formattedMessage);
+        targetClient.sendMessage(senderId, formattedMessage);
+    }
+
+
     // end send data to client(s)
 
     // receive data from ServerThread
@@ -224,43 +247,12 @@ public class Room implements AutoCloseable{
         }
     }
 
-    protected void handleListRooms(ServerThread sender, String roomQuery){
+    protected void handleListRooms(ServerThread sender, String roomQuery) {
         sender.sendRooms(Server.INSTANCE.listRooms(roomQuery));
     }
 
     protected void clientDisconnect(ServerThread sender) {
         disconnect(sender);
     }
-
-    //vk686 07/08/2024
-     protected void handleRoll(ServerThread sender, RollPayload payload) {
-        int numberOfDice = payload.getNumberOfDice();
-        int sidesPerDie = payload.getSidesPerDie();
-        int rollResult = rollDice(numberOfDice, sidesPerDie);
-        payload.setRollResult(rollResult);
-        String result;
-        if (numberOfDice == 1) {
-            result = String.format("%s rolled %d and got %d", sender.getClientName(), sidesPerDie, rollResult);
-        } else {
-            result = String.format("%s rolled %dd%d and got %d", sender.getClientName(), numberOfDice, sidesPerDie, rollResult);
-        }
-        sendMessage(sender, result);
-    }
-
-    private int rollDice(int numberOfDice, int sidesPerDie) {
-        int total = 0;
-        for (int i = 0; i < numberOfDice; i++) {
-            total += (int) (Math.random() * sidesPerDie) + 1;
-        }
-        return total;
-    }
-
-    protected void handleFlip(ServerThread sender) {
-        String result = Math.random() < 0.5 ? "heads" : "tails";
-        String message = String.format("%s flipped a coin and got %s", sender.getClientName(), result);
-        sendMessage(sender, message);
-    }
-
-
     // end receive data from ServerThread
 }

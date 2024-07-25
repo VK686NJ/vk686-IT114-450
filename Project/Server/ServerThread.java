@@ -1,11 +1,14 @@
 package Project.Server;
 
 import java.net.Socket;
+
 import java.util.List;
 import java.util.Objects;
+
 import java.util.function.Consumer;
 
 import Project.Common.PayloadType;
+import Project.Common.PrivateMessagePayload;
 import Project.Common.RollPayload;
 import Project.Common.RoomResultsPayload;
 import Project.Common.TextFX;
@@ -32,7 +35,8 @@ public class ServerThread extends BaseServerThread {
      * @param onInitializationComplete method to inform listener that this object is
      *                                 ready
      */
-    protected ServerThread(Socket myClient, Consumer<ServerThread> onInitializationComplete) {
+    protected ServerThread(
+            Socket myClient, Consumer<ServerThread> onInitializationComplete) {
         Objects.requireNonNull(myClient, "Client socket cannot be null");
         Objects.requireNonNull(onInitializationComplete, "callback cannot be null");
         info("ServerThread created");
@@ -114,7 +118,7 @@ public class ServerThread extends BaseServerThread {
                 case ROOM_LIST:
                     currentRoom.handleListRooms(this, payload.getMessage());
                     break;
-                //vk686 07/07/2024
+                // vk686 07/22/2024
                 case ROLL:
                     handleRollPayload((RollPayload) payload);
                     break;
@@ -124,16 +128,27 @@ public class ServerThread extends BaseServerThread {
                 case DISCONNECT:
                     currentRoom.disconnect(this);
                     break;
+                case PRIVATE:
+                    handlePrivateMessagePayload((PrivateMessagePayload) payload);
+                    break;
+                /*
+                 * case MUTE:vk686 07/24/2024
+                 * handleMutePayload(payload, true);
+                 * break;
+                 * case UNMUTE:
+                 * handleMutePayload(payload, false);
+                 * break;
+                 */
                 default:
                     break;
             }
         } catch (Exception e) {
-            LoggerUtil.INSTANCE.severe("Could not process Payload: " + payload,e);
-        
+            LoggerUtil.INSTANCE.severe("Could not process Payload: " + payload, e);
+
         }
     }
 
-    //vk686 07/07/2024
+    // vk686 07/22/2024
     private void handleRollPayload(RollPayload rollPayload) {
         int numberOfDice = rollPayload.getNumberOfDice();
         int sidesPerDie = rollPayload.getSidesPerDie();
@@ -143,11 +158,14 @@ public class ServerThread extends BaseServerThread {
         if (numberOfDice == 1) {
             result = String.format("%s rolled %d and got %d", getClientName(), sidesPerDie, rollResult);
         } else {
-            result = String.format("%s rolled %dd%d and got %d", getClientName(), numberOfDice, sidesPerDie, rollResult);
+            result = String.format("%s rolled %dd%d and got %d", getClientName(), numberOfDice, sidesPerDie,
+                    rollResult);
         }
+
+        result = TextFX.formatText(String.format("_**<font color='green'>%s</font>**_", result));
         currentRoom.sendMessage(this, result);
     }
-    
+
     private int rollDice(int numberOfDice, int sidesPerDie) {
         int total = 0;
         for (int i = 0; i < numberOfDice; i++) {
@@ -155,14 +173,37 @@ public class ServerThread extends BaseServerThread {
         }
         return total;
     }
-    
+
     private void handleFlipPayload(Payload payload) {
-        String message = Math.random() < 0.5 ? "heads" : "tails";
-        String result = String.format("%s flipped a coin and got %s", getClientName(), message);
-        currentRoom.sendMessage(this, result);
+        String result = Math.random() < 0.5 ? "heads" : "tails";
+        String message = String.format("%s flipped a coin and got %s", getClientName(), result);
+
+        message = TextFX.formatText(String.format("_**<font color='red'>%s</font>**_", message));
+        currentRoom.sendMessage(this, message);
     }
-    
-    
+
+    private void handlePrivateMessagePayload(PrivateMessagePayload payload) {
+        // Sending the private message details to the Room class
+        currentRoom.sendPrivateMessage(this, payload.getTargetClientId(), payload.getMessage());
+    }
+    // vk686 07/24/2024
+    /*
+     * private void handleMutePayload(Payload payload, boolean mute) {
+     * long targetClientId = payload.getTargetClientId();
+     * if (mute) {
+     * mutedClientIds.add(targetClientId);
+     * sendMessage("Muted user with ID " + targetClientId);
+     * } else {
+     * mutedClientIds.remove(targetClientId);
+     * sendMessage("Unmuted user with ID " + targetClientId);
+     * }
+     * }
+     * 
+     * public boolean isMuted(long clientId) {
+     * return mutedClientIds.contains(clientId);
+     * }
+     */
+
     // send methods to pass data back to the Client
 
     public boolean sendRooms(List<String> rooms) {
