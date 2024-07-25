@@ -13,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 import Project.Client.CardView;
 import Project.Client.Interfaces.ICardControls;
 import Project.Common.LoggerUtil;
-
+//vk686 07/24/2024
 /**
  * UserDetailsPanel represents the UI for entering user details like username.
  */
@@ -76,7 +76,7 @@ public class UserDetailsPanel extends JPanel {
         this.setName(CardView.USER_INFO.name());
         controls.addPanel(CardView.USER_INFO.name(), this);
     }
-
+     //vk686 07/24/2024
     /**
      * Gets the username entered by the user.
      * 

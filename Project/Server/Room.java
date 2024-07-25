@@ -162,6 +162,10 @@ public class Room implements AutoCloseable {
     protected synchronized void sendRoomStatus(long clientId, String clientName, boolean isConnect) {
         info(String.format("sending room status to %s recipients", getName(), clientsInRoom.size()));
         clientsInRoom.values().removeIf(client -> {
+            //if (client.isMuted(senderId)) {
+                //LoggerUtil.INSTANCE.info("Message skipped for muted user: " + client.getClientName());
+                //return false;
+            
             boolean failedToSend = !client.sendRoomAction(clientId, clientName, getName(), isConnect);
             if (failedToSend) {
                 info(String.format("Removing disconnected client[%s] from list", client.getClientId()));
@@ -206,6 +210,26 @@ public class Room implements AutoCloseable {
             return failedToSend;
         });
     }
+    //vk686 07/23/2024
+    protected synchronized void sendPrivateMessage(ServerThread sender, long targetClientId, String message) {
+        if (!isRunning) { // Blocking action if Room isn't running
+            return;
+        }
+
+        ServerThread targetClient = clientsInRoom.get(targetClientId);
+        if (targetClient == null) {
+            sender.sendMessage(String.format("User with ID %d not found in the room", targetClientId));
+            return;
+        }
+
+        long senderId = sender == null ? ServerThread.DEFAULT_CLIENT_ID : sender.getClientId();
+        String formattedMessage = String.format("Private message: %s", message);
+    // Sending the message to both(Sender and Target user)
+        sender.sendMessage(senderId, formattedMessage);
+        targetClient.sendMessage(senderId, formattedMessage);
+    }
+
+
     // end send data to client(s)
 
     // receive data from ServerThread
@@ -230,24 +254,5 @@ public class Room implements AutoCloseable {
     protected void clientDisconnect(ServerThread sender) {
         disconnect(sender);
     }
-
-    protected synchronized void sendPrivateMessage(ServerThread sender, long targetClientId, String message) {
-        if (!isRunning) { // block action if Room isn't running
-            return;
-        }
-
-        ServerThread targetClient = clientsInRoom.get(targetClientId);
-        if (targetClient == null) {
-            sender.sendMessage(String.format("User with ID %d not found in the room", targetClientId));
-            return;
-        }
-
-        long senderId = sender == null ? ServerThread.DEFAULT_CLIENT_ID : sender.getClientId();
-        String formattedMessage = String.format("Private message: %s", message);
-
-        sender.sendMessage(senderId, formattedMessage);
-        targetClient.sendMessage(senderId, formattedMessage);
-    }
-
     // end receive data from ServerThread
 }

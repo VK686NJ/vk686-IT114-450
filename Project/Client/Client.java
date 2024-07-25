@@ -53,7 +53,7 @@ public enum Client {
     private volatile boolean isRunning = true; // volatile for thread-safe visibility
     private ConcurrentHashMap<Long, ClientData> knownClients = new ConcurrentHashMap<>();
     private ClientData myData;
-    // vk686 07/07/2024
+    // vk686 07/22/2024
     // constants (used to reduce potential types when using them in code)
     private final String COMMAND_CHARACTER = "/";
     private final String CREATE_ROOM = "createroom";
@@ -180,6 +180,7 @@ public enum Client {
                 System.out.println(TextFX.colorize("Name must be set first via /name command", Color.RED));
                 return true;
             }
+            //vk686 07/23/2024
             // replaces multiple spaces with a single space
             // splits on the space after connect (gives us host and port)
             // splits on : to get host as index 0 and port as index 1
@@ -189,7 +190,7 @@ public enum Client {
             return true;
         } else if (text.startsWith("@")) {
             handlePrivateMessage(text);
-            return true;   
+            return true;
         } else if ("/quit".equalsIgnoreCase(text)) {
             close();
             return true;
@@ -202,7 +203,13 @@ public enum Client {
                     String.join("\n", knownClients.values().stream()
                             .map(c -> String.format("%s(%s)", c.getClientName(), c.getClientId())).toList()));
             return true;
-        } else { // logic previously from Room.java
+        } /*else if (text.startsWith("/mute ")) {
+            handleMuteCommand(text.replace("/mute ", "").trim(), true);
+            return true;
+        } else if (text.startsWith("/unmute ")) {
+            handleMuteCommand(text.replace("/unmute ", "").trim(), false);
+            return true;  vk686 07/24/2024*/ 
+        else { // logic previously from Room.java
             // decided to make this as separate block to separate the core client-side items
             // vs the ones that generally are used after connection and that send requests
             if (text.startsWith(COMMAND_CHARACTER)) {
@@ -230,7 +237,7 @@ public enum Client {
                     case DISCONNECT:
                     case LOGOFF:
                     case LOGOUT:
-                        // vk686 07/07/2024
+                        // vk686 07/22/2024
                         sendDisconnect();
                         wasCommand = true;
                         break;
@@ -262,27 +269,29 @@ public enum Client {
      * @throws IOException
      */
 
-     private void handlePrivateMessage(String text) throws IOException {
+
+    //vk686 07/23/2024
+    private void handlePrivateMessage(String text) throws IOException {
+        // Extracting the username
         String[] parts = text.split(" ", 2);
-        if (parts.length < 2) {
-            System.out.println(TextFX.colorize("Invalid private message format", Color.RED));
-            return;
-        }
-        String targetName = parts[0].substring(1); // Remove the '@'
+        
+        String targetName = parts[0].substring(1); // Removing the @
         String message = parts[1];
-    
-        // Find the client ID
-        long targetClientId = knownClients.values().stream()
-                .filter(client -> client.getClientName().equalsIgnoreCase(targetName))
-                .map(ClientData::getClientId)
-                .findFirst()
-                .orElse(-1L);
-    
+
+        // Looking for the client ID
+        long targetClientId = -1;
+        for (ClientData client : knownClients.values()) {
+            if (client.getClientName().equalsIgnoreCase(targetName)) {
+                targetClientId = client.getClientId();
+                break;
+            }
+        }
+        // Informing the user if the target user was not found
         if (targetClientId == -1L) {
             System.out.println(TextFX.colorize("User not found: " + targetName, Color.RED));
             return;
         }
-    
+        // Creating a PrivateMessagePayload to send the private message
         PrivateMessagePayload p = new PrivateMessagePayload();
         p.setPayloadType(PayloadType.PRIVATE);
         p.setClientId(myData.getClientId());
@@ -290,6 +299,39 @@ public enum Client {
         p.setMessage(message);
         send(p);
     }
+
+    //vk686 07/24/2024
+    /*private void handleMuteCommand(String targetName, boolean mute) throws IOException {
+        // Lookinf for the client ID
+        long targetClientId = -1L;
+        for (ClientData client : knownClients.values()) {
+            if (client.getClientName().equalsIgnoreCase(targetName)) {
+                targetClientId = client.getClientId();
+                break;
+            }
+        }
+    
+        // If the user is not found, print an error message and return
+        if (targetClientId == -1L) {
+            System.out.println(TextFX.colorize("User not found: " + targetName, Color.RED));
+            return;
+        }
+    
+        // Creating a new payload with the mute/unmute command
+        Payload payload = new Payload();
+        payload.setPayloadType(mute ? PayloadType.MUTE : PayloadType.UNMUTE);
+        payload.setClientId(myData.getClientId());
+        payload.setTargetClientId(targetClientId);
+    
+        // Send the payload
+        send(payload);
+    
+        // Printing a success message
+        System.out.println(TextFX.colorize((mute ? "Muted " : "Unmuted ") + targetName, Color.GREEN));
+    }*/
+
+
+
 
     public void sendListRooms(String roomQuery) throws IOException {
         Payload p = new Payload();

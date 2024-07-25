@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-
+//vk686 07/24/2024
 import Project.Client.CardView;
 import Project.Client.Interfaces.ICardControls;
 
@@ -92,7 +92,7 @@ public class ConnectionPanel extends JPanel {
     public String getHost() {
         return host;
     }
-
+//vk686 07/24/2024
     /**
      * Gets the port value entered by the user.
      * 

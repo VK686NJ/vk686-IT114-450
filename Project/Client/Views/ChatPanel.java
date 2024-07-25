@@ -1,5 +1,5 @@
 package Project.Client.Views;
-
+//vk686 07/24/2024
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -88,7 +88,7 @@ public class ChatPanel extends JPanel {
             public void componentHidden(ComponentEvent e) {
             }
         });
-
+     //vk686 07/24/2024
         JPanel input = new JPanel();
         input.setLayout(new BoxLayout(input, BoxLayout.X_AXIS));
         input.setBorder(new EmptyBorder(5, 5, 5, 5)); // Add padding
@@ -167,7 +167,7 @@ public class ChatPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH; // Fill both horizontally and vertically
         chatArea.add(Box.createVerticalGlue(), gbc);
     }
-
+    //vk686 07/24/2024
     /**
      * Adds a user to the user list.
      * 
@@ -199,6 +199,7 @@ public class ChatPanel extends JPanel {
      * 
      * @param text The text of the message.
      */
+    //vk686 07/24/2024
     public void addText(String text) {
         SwingUtilities.invokeLater(() -> {
             JEditorPane textContainer = new JEditorPane("text/html", text);

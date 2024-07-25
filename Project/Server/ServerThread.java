@@ -1,8 +1,10 @@
 package Project.Server;
 
 import java.net.Socket;
+
 import java.util.List;
 import java.util.Objects;
+
 import java.util.function.Consumer;
 
 import Project.Common.PayloadType;
@@ -33,7 +35,8 @@ public class ServerThread extends BaseServerThread {
      * @param onInitializationComplete method to inform listener that this object is
      *                                 ready
      */
-    protected ServerThread(Socket myClient, Consumer<ServerThread> onInitializationComplete) {
+    protected ServerThread(
+            Socket myClient, Consumer<ServerThread> onInitializationComplete) {
         Objects.requireNonNull(myClient, "Client socket cannot be null");
         Objects.requireNonNull(onInitializationComplete, "callback cannot be null");
         info("ServerThread created");
@@ -115,7 +118,7 @@ public class ServerThread extends BaseServerThread {
                 case ROOM_LIST:
                     currentRoom.handleListRooms(this, payload.getMessage());
                     break;
-                // vk686 07/07/2024
+                // vk686 07/22/2024
                 case ROLL:
                     handleRollPayload((RollPayload) payload);
                     break;
@@ -128,6 +131,14 @@ public class ServerThread extends BaseServerThread {
                 case PRIVATE:
                     handlePrivateMessagePayload((PrivateMessagePayload) payload);
                     break;
+                /*
+                 * case MUTE:vk686 07/24/2024
+                 * handleMutePayload(payload, true);
+                 * break;
+                 * case UNMUTE:
+                 * handleMutePayload(payload, false);
+                 * break;
+                 */
                 default:
                     break;
             }
@@ -137,7 +148,7 @@ public class ServerThread extends BaseServerThread {
         }
     }
 
-    // vk686 07/07/2024
+    // vk686 07/22/2024
     private void handleRollPayload(RollPayload rollPayload) {
         int numberOfDice = rollPayload.getNumberOfDice();
         int sidesPerDie = rollPayload.getSidesPerDie();
@@ -172,8 +183,26 @@ public class ServerThread extends BaseServerThread {
     }
 
     private void handlePrivateMessagePayload(PrivateMessagePayload payload) {
+        // Sending the private message details to the Room class
         currentRoom.sendPrivateMessage(this, payload.getTargetClientId(), payload.getMessage());
     }
+    // vk686 07/24/2024
+    /*
+     * private void handleMutePayload(Payload payload, boolean mute) {
+     * long targetClientId = payload.getTargetClientId();
+     * if (mute) {
+     * mutedClientIds.add(targetClientId);
+     * sendMessage("Muted user with ID " + targetClientId);
+     * } else {
+     * mutedClientIds.remove(targetClientId);
+     * sendMessage("Unmuted user with ID " + targetClientId);
+     * }
+     * }
+     * 
+     * public boolean isMuted(long clientId) {
+     * return mutedClientIds.contains(clientId);
+     * }
+     */
 
     // send methods to pass data back to the Client
 

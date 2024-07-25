@@ -50,7 +50,7 @@ public abstract class TextFX {
         builder.append(RESET);
         return builder.toString();
     }
-    //vk686 07/06/24
+    //vk686 07/21/24
     public static String bold(String text) {
         return "<b>" + text + "</b>";
     }
