@@ -250,6 +250,11 @@ public class ClientUI extends JFrame implements IConnectionEvents, IMessageEvent
 
         }
     }
+    //vk686 -7/26/2024
+    @Override
+    public void lastUser(long clientId){
+        chatPanel.lastUser(clientId);
+    }
 
     // Interface methods end
 }

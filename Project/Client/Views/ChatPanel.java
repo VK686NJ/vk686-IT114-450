@@ -13,7 +13,12 @@ import java.awt.event.ContainerEvent;
 import java.awt.event.ContainerListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -131,6 +136,13 @@ public class ChatPanel extends JPanel {
 
         input.add(button);
 
+        //vk686 07/26/2024
+        JButton buttonExp = new JButton("Export Chat");
+        buttonExp.addActionListener((event) -> {
+            exportChat();
+        });
+        input.add(buttonExp);
+
         this.add(splitPane, BorderLayout.CENTER);
         this.add(input, BorderLayout.SOUTH);
 
@@ -176,6 +188,10 @@ public class ChatPanel extends JPanel {
      */
     public void addUserListItem(long clientId, String clientName) {
         SwingUtilities.invokeLater(() -> userListPanel.addUserListItem(clientId, clientName));
+    }
+
+    public void lastUser(long clientId){
+        userListPanel.lastUser(clientId);
     }
 
     /**
@@ -238,5 +254,29 @@ public class ChatPanel extends JPanel {
                 vertical.setValue(vertical.getMaximum());
             });
         });
+    }
+//vk686 07/25/2024
+    public void exportChat() {
+        StringBuilder chatHistory = new StringBuilder();
+    
+        // Collecting all messages from the chat
+        for (Component component : chatArea.getComponents()) {
+            if (component instanceof JEditorPane jEditorPane) {
+                chatHistory.append(jEditorPane.getText()).append("\n");
+            }
+        }
+    
+        // Creating a unique file name with the current date and time.
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String filename = "chat_history_" + timestamp + ".txt";
+    
+        // Writing chat history to file
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(chatHistory.toString());
+            System.out.println("Chat history exported to " + filename);
+        } catch (IOException e) {
+            LoggerUtil.INSTANCE.severe("Error exporting chat", e);
+            
+        }
     }
 }
