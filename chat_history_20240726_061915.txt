@@ -1,0 +1,55 @@
+<html>
+  <head>
+    
+  </head>
+  <body>
+    *You connected*
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    *You joined the Room lobby*
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[1]: Hello!
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: Hi!
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: What's your plans for today?
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[1]: I have a few meetings scheduled and then I'll be working on some 
+    tasks for my job.
+  </body>
+</html>
+

@@ -569,6 +569,7 @@ public enum Client {
      * 
      * @param payload
      */
+    //vk686 07/26/2024
     private void processPayload(Payload payload) {
         try {
             LoggerUtil.INSTANCE.info("Received Payload: " + payload);
@@ -596,6 +597,7 @@ public enum Client {
                     break;
                 case PayloadType.MESSAGE: // displays a received message
                     processMessage(payload.getClientId(), payload.getMessage());
+                    events.lastUser(payload.getClientId());
                     break;
                 default:
                     break;

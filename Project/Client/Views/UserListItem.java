@@ -3,7 +3,6 @@ package Project.Client.Views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -16,7 +15,6 @@ import javax.swing.border.EmptyBorder;
  */
 public class UserListItem extends JPanel {
     private JEditorPane textContainer;
-
     /**
      * Constructor to create a UserListItem.
      *
@@ -47,9 +45,20 @@ public class UserListItem extends JPanel {
 
         this.setLayout(new BorderLayout());
         this.add(textContainer, BorderLayout.CENTER);
+
+        this.setName(String.valueOf(clientId));
     }
 
     public String getClientName() {
         return textContainer.getText();
+    }
+    //vk686 07/25/2024
+   
+    @Override
+    public void setForeground(Color color) {
+        super.setForeground(color);
+        if (textContainer != null) {
+            textContainer.setForeground(color); 
+        }
     }
 }

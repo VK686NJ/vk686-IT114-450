@@ -1,6 +1,8 @@
 package Project.Client.Views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -173,5 +175,19 @@ public class UserListPanel extends JPanel {
             userListArea.revalidate();
             userListArea.repaint();
         });
+    }
+
+    // vk686 07/25/2024
+    public void lastUser(long clientId) {
+
+        Component[] a = userListArea.getComponents();
+        for (Component b : a) {
+            String name = b.getName();
+            if (name != null && name.equals(String.valueOf(clientId))) {
+                b.setForeground(Color.BLUE);
+            } else {
+                b.setForeground(Color.BLACK);
+            }
+        }
     }
 }
