@@ -1,0 +1,210 @@
+<html>
+  <head>
+    
+  </head>
+  <body>
+    *You connected*
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    *You joined the Room lobby*
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    *Bobby[2] joined the Room lobby*
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    *Anna[3] joined the Room lobby*
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: Hi
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: Hey
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Cory[1]: Hello
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: Private message: how are your parents?
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: <b>Hello</b>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: <i>Hey</i>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Cory[1]: <u>HII</u>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: <font color="red">I have something for you</font>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: <font color="blue">Cool</font>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: <font color="green">good </font>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: This is <b>bold</b> and <i>italic</i> along with <u>underlined</u> 
+    with colored text such as <font color="red">red </font>, <font color="blue">blue 
+    </font>, and <font color="green">green </font>and must support a 
+    combination of all formats + color like <b><u><i><font color="red">this is 
+    bold, underline, italic, and red </font></i></u></b>.
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: This is <b>bold</b> and <i>italic</i> along with <u>underlined</u> 
+    with colored text such as <font color="red">red </font>, <font color="blue">blue 
+    </font>, and <font color="green">green </font>and must support a 
+    combination of all formats + color like <b><u><i><font color="red">this is 
+    bold, underline, italic, and red </font></i></u></b>.
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Cory[1]: This is <b>bold</b> and <i>italic</i> along with <u>underlined</u> 
+    with colored text such as <font color="red">red </font>, <font color="blue">blue 
+    </font>, and <font color="green">green </font>and must support a 
+    combination of all formats + color like <b><u><i><font color="red">this is 
+    bold, underline, italic, and red </font></i></u></b>.
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Cory[1]: <u><b><font color="green">Cory rolled 100 and got 48</font></b></u>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: <u><b><font color="red">Bobby flipped a coin and got heads</font></b></u>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: <u><b><font color="green">Anna rolled 2d6 and got 10</font></b></u>
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Bobby[2]: Test
+  </body>
+</html>
+
+<html>
+  <head>
+    
+  </head>
+  <body>
+    Anna[3]: TestNow
+  </body>
+</html>
+
